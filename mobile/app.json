@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "CarGasPh",
+    "slug": "cargasph",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "cargasph",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "ph.cargas.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "CarGasPh uses your location to calculate driving route distances, estimate fuel costs, and display nearby gas stations.",
+        "UIBackgroundModes": []
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F172A"
+      },
+      "package": "com.cargasph.app",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID}"
+        }
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "CarGasPh uses your location to calculate driving route distances, estimate fuel costs, and display nearby gas stations."
+        }
+      ],
+      [
+        "expo-secure-store"
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

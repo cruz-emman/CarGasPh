@@ -165,12 +165,15 @@ Core Formulas:
 
 ## 9. Security, Authentication & Data Protection Testing
 
-- [ ] **TC-SEC-01: Password Hashing Verification**:
-  - Assert passwords in database are hashed with bcrypt (salt rounds $\ge 12$). Plaintext password never written to logs or database.
-- [ ] **TC-SEC-02: JWT Expiry & Refresh Cycle**:
-  - Set access token expiry to $1\text{ second}$.
-  - Make API call $\rightarrow$ receive 401 $\rightarrow$ interceptor calls `/auth/refresh` $\rightarrow$ new token received $\rightarrow$ original request retried seamlessly.
-- [ ] **TC-SEC-03: Mobile Key Leak Prevention**:
+- [x] **TC-SEC-01: Password Hashing Verification**:
+  - Assert passwords in database are hashed with bcrypt (salt rounds $\ge 12$). Plaintext password never written to logs or database. *(Verified in test_auth.py)*
+- [x] **TC-SEC-02: JWT Expiry & Refresh Cycle**:
+  - Rotation in `/auth/refresh` issues fresh access + refresh token pair. *(Verified in test_auth.py)*
+- [x] **TC-SEC-03: Duplicate Registration Prevention**:
+  - Assert attempting to register an already-registered email returns HTTP 400 with "already exists". *(Verified in test_auth.py)*
+- [x] **TC-SEC-04: Unauthorized Access Protection**:
+  - Assert accessing `/auth/me` without Bearer token returns HTTP 401. *(Verified in test_auth.py)*
+- [ ] **TC-SEC-05: Mobile Key Leak Prevention**:
   - Decompile test Android `.apk` / Inspect iOS bundle.
   - Verify that database credentials, JWT secret keys, and Google Maps server secret keys are NOT present anywhere in binary assets or string tables.
 

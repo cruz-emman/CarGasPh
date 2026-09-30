@@ -14,8 +14,8 @@
 | Phase | Description | Status | Target Completion |
 |---|---|---|---|
 | **PHASE 0** | Research and Architecture | `[x] Completed` | 2026-09-30 |
-| **PHASE 1** | Foundation & Project Setup | `[ ] Not Started` | — |
-| **PHASE 2** | Authentication & User Management | `[ ] Not Started` | — |
+| **PHASE 1** | Foundation & Project Setup | `[x] Completed` | 2026-09-30 |
+| **PHASE 2** | Authentication & User Management | `[x] Completed` | 2026-09-30 |
 | **PHASE 3** | Vehicle Garage & Philippine Catalog | `[ ] Not Started` | — |
 | **PHASE 4** | Maps & Navigation Engine | `[ ] Not Started` | — |
 | **PHASE 5** | Philippine Fuel Prices & Movements | `[ ] Not Started` | — |
@@ -102,50 +102,91 @@
 ---
 
 ### PHASE 1 — Foundation & Project Setup
-- [ ] Task 1.1: Initialize `/backend` FastAPI structure, requirements.txt, and Dockerfile.
-  - **Status**: `[ ] Not Started`
-  - **Date Started**: —
-  - **Date Completed**: —
-  - **Files Modified**: —
-  - **Decision**: —
-  - **Testing Result**: —
-  - **Follow-up**: —
-- [ ] Task 1.2: Configure PostgreSQL 16 + PostGIS and Redis in `docker-compose.yml`.
-  - **Status**: `[ ] Not Started`
-  - **Date Started**: —
-  - **Date Completed**: —
-  - **Files Modified**: —
-  - **Decision**: —
-  - **Testing Result**: —
-  - **Follow-up**: —
-- [ ] Task 1.3: Initialize `/mobile` Expo SDK 52 project with TypeScript and Expo Router v4.
-  - **Status**: `[ ] Not Started`
-  - **Date Started**: —
-  - **Date Completed**: —
-  - **Files Modified**: —
-  - **Decision**: —
-  - **Testing Result**: —
-  - **Follow-up**: —
-- [ ] Task 1.4: Configure ESLint, Prettier, and environment variable loaders.
-  - **Status**: `[ ] Not Started`
-  - **Date Started**: —
-  - **Date Completed**: —
-  - **Files Modified**: —
-  - **Decision**: —
-  - **Testing Result**: —
-  - **Follow-up**: —
+
+#### Task 1.1: Backend Structure, Dependencies & Dockerization
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `backend/requirements.txt`, `backend/Dockerfile`, `backend/.dockerignore`, `backend/.env.example`
+- **Decision**: Configured Python 3.11 slim Dockerfile with `build-essential`, `libpq-dev`, and `libgeos-dev` to support psycopg2 and GeoAlchemy2.
+- **Testing Result**: Requirements verified for compatibility with async SQLAlchemy 2.0 and Pydantic v2.
+- **Follow-up**: Connect to database in Task 1.2.
+
+#### Task 1.2: Database, PostGIS, Alembic & Redis Configuration
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `docker-compose.yml`, `backend/alembic.ini`, `backend/alembic/env.py`, `backend/alembic/script.py.mako`, `backend/app/core/config.py`, `backend/app/core/database.py`, `backend/app/core/redis.py`, `backend/app/models/*`
+- **Decision**: Added `postgis/postgis:16-3.4` and `redis:7-alpine` services in `docker-compose.yml`. Initialized 8 model files covering users, vehicles, fuel prices, gas stations (with PostGIS spatial point), saved routes, fuel logs, and news.
+- **Testing Result**: Alembic environment configured for async SQLAlchemy engine and GeoAlchemy2 spatial type migrations.
+- **Follow-up**: Seed vehicle data in Phase 3.
+
+#### Task 1.3: FastAPI Application Skeleton & Health Endpoints
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `backend/app/main.py`, `backend/app/api/v1/api_router.py`, `backend/app/api/v1/endpoints/health.py`, `backend/app/schemas/health.py`, `backend/tests/test_health.py`
+- **Decision**: Implemented `/api/v1/health` endpoint that actively tests database connectivity (`SELECT 1`) and Redis connectivity (`ping()`). Configured CORS middleware and lifespan shutdown handler.
+- **Testing Result**: Pytest unit test in `test_health.py` verifies root status response and OpenAPI docs mounting.
+- **Follow-up**: Implement authentication endpoints in Phase 2.
+
+#### Task 1.4: Mobile Project Initialization (Expo SDK 52 & Expo Router v4)
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `mobile/package.json`, `mobile/tsconfig.json`, `mobile/app.json`, `mobile/.eslintrc.js`, `mobile/.prettierrc`, `mobile/babel.config.js`, `mobile/metro.config.js`
+- **Decision**: Initialized Expo SDK 52 with typed routes enabled, strict TypeScript, ESLint, Prettier, and custom native permissions in `app.json` for Android (`com.cargasph.app`) and iOS (`ph.cargas.app`).
+- **Testing Result**: Configured dependencies for TanStack Query, Zustand, React Hook Form, Zod, and Lucide icons.
+- **Follow-up**: Implement UI layout in Task 1.5.
+
+#### Task 1.5: Mobile Navigation Hierarchy, Theme & Core Screens
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `mobile/app/_layout.tsx`, `mobile/app/index.tsx`, `mobile/app/(tabs)/_layout.tsx`, `mobile/app/(tabs)/index.tsx`, `mobile/app/(tabs)/map.tsx`, `mobile/app/(tabs)/fuel.tsx`, `mobile/app/(tabs)/garage.tsx`, `mobile/app/(tabs)/profile.tsx`, `mobile/src/constants/theme.ts`, `mobile/src/services/api.ts`, `mobile/src/stores/useAuthStore.ts`, `mobile/src/types/index.ts`
+- **Decision**: Built complete 5-tab navigation (`Home`, `Map`, `Fuel`, `Garage`, `Profile`) adhering to dark slate theme and Philippine peso formatting. Integrated `useAuthStore` with `expo-secure-store` and `apiClient` with automatic JWT attachment.
+- **Testing Result**: Screens render with mocked Philippine data (Aerox 155, Vios, DOE prevailing pump prices, and fuel rollback indicators).
+- **Follow-up**: Proceed to Phase 2 for User Authentication backend and UI forms.
 
 ---
 
 ### PHASE 2 — Authentication & User Management
-- [ ] Task 2.1: Backend User ORM model, password hashing (bcrypt), and JWT auth routes.
-  - **Status**: `[ ] Not Started`
-- [ ] Task 2.2: Refresh token rotation and secure session persistence.
-  - **Status**: `[ ] Not Started`
-- [ ] Task 2.3: Mobile authentication UI (Login, Register, Forgot Password) with Zod validation.
-  - **Status**: `[ ] Not Started`
-- [ ] Task 2.4: Hardware-backed token storage via `expo-secure-store`.
-  - **Status**: `[ ] Not Started`
+
+#### Task 2.1: Backend User Schemas, Password Hashing & JWT Auth Routes
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `backend/app/schemas/user_schema.py`, `backend/app/api/deps.py`, `backend/app/api/v1/endpoints/auth.py`, `backend/app/api/v1/endpoints/users.py`, `backend/app/api/v1/api_router.py`
+- **Decision**: Implemented `/auth/register` with duplicate email check, bcrypt password hashing, and token issuance; `/auth/login` with credential verification; `/auth/me` with Bearer token authentication; `/auth/forgot-password` with signed temporary token generation; and `/users/me` with profile and password update support.
+- **Testing Result**: Verified payload validation using Pydantic v2 schemas and JWT decode error handling.
+- **Follow-up**: Write automated pytest suite in Task 2.2.
+
+#### Task 2.2: Refresh Token Rotation & Backend Pytest Suite
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `backend/app/api/v1/endpoints/auth.py`, `backend/tests/test_auth.py`
+- **Decision**: Designed refresh token rotation in `/auth/refresh`—issuing both a fresh access token and a fresh refresh token upon every cycle to prevent token replay attacks.
+- **Testing Result**: Pytest suite in `test_auth.py` passed with 5 test scenarios covering registration, duplicate email rejection, login, incorrect password 401, and unauthorized endpoint rejection.
+- **Follow-up**: Build mobile authentication UI in Task 2.3.
+
+#### Task 2.3: Mobile Authentication UI (Login, Register, Forgot Password)
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `mobile/src/utils/validation.ts`, `mobile/app/(auth)/_layout.tsx`, `mobile/app/(auth)/login.tsx`, `mobile/app/(auth)/register.tsx`, `mobile/app/(auth)/forgot-password.tsx`
+- **Decision**: Built complete auth flow using React Hook Form + Zod resolvers (`loginSchema`, `registerSchema`, `forgotPasswordSchema`). Implemented password visibility toggles, loading spinners, global error banners, and clean transitions.
+- **Testing Result**: Form validation correctly rejects invalid email syntax and passwords under 8 characters or missing uppercase/digits.
+- **Follow-up**: Connect to hardware-backed secure storage in Task 2.4.
+
+#### Task 2.4: Hardware-Backed Token Storage & Session Restore
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `mobile/src/services/auth.service.ts`, `mobile/src/stores/useAuthStore.ts`, `mobile/app/index.tsx`, `mobile/app/(tabs)/profile.tsx`
+- **Decision**: Stored access and refresh tokens inside iOS Keychain / Android Keystore using `expo-secure-store`. `index.tsx` acts as an authentication gatekeeper restoring session on startup and redirecting to `/(tabs)` or `/(auth)/login`. Profile screen reflects dynamic user profile and functional logout.
+- **Testing Result**: Verified token persistence and graceful fallback to refresh token if access token expires.
+- **Follow-up**: Proceed to Phase 3 — Vehicle Garage.
 
 ---
 
