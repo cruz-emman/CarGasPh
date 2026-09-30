@@ -16,7 +16,7 @@
 | **PHASE 0** | Research and Architecture | `[x] Completed` | 2026-09-30 |
 | **PHASE 1** | Foundation & Project Setup | `[x] Completed` | 2026-09-30 |
 | **PHASE 2** | Authentication & User Management | `[x] Completed` | 2026-09-30 |
-| **PHASE 3** | Vehicle Garage & Philippine Catalog | `[ ] Not Started` | — |
+| **PHASE 3** | Vehicle Garage & Philippine Catalog | `[x] Completed` | 2026-09-30 |
 | **PHASE 4** | Maps & Navigation Engine | `[ ] Not Started` | — |
 | **PHASE 5** | Philippine Fuel Prices & Movements | `[ ] Not Started` | — |
 | **PHASE 6** | Fuel Consumption Engine | `[ ] Not Started` | — |
@@ -190,13 +190,34 @@
 
 ---
 
-### PHASE 3 — Vehicle Garage
-- [ ] Task 3.1: Seed database with top 50 Philippine cars and top 30 Philippine motorcycles.
-  - **Status**: `[ ] Not Started`
-- [ ] Task 3.2: User Garage CRUD endpoints (`/api/v1/garage`).
-  - **Status**: `[ ] Not Started`
-- [ ] Task 3.3: Mobile Garage screen with default vehicle selector and custom vehicle wizard.
-  - **Status**: `[ ] Not Started`
+### PHASE 3 — Vehicle Garage & Philippine Catalog
+
+#### Task 3.1: Seed Database with Top Philippine Cars & Motorcycles
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `backend/app/core/vehicle_seeds.py`, `backend/app/core/seed.py`
+- **Decision**: Compiled comprehensive dataset of top 30 Philippine motorcycles (Yamaha Aerox, NMAX, Mio; Honda Click 125/160, BeAT, PCX, ADV; Suzuki Burgman, Raider R150 Fi) and top 50 Philippine passenger cars/SUVs/MPVs/Pickups (Toyota Vios, Wigo, Innova, Hilux, Fortuner; Mitsubishi Mirage G4, Xpander, Montero Sport; Isuzu D-Max, mu-X; Nissan Navara; Ford Ranger, etc.). Built idempotent seeding script populating `vehicle_makes`, `vehicle_models`, and `vehicle_variants`.
+- **Testing Result**: Verified catalog integrity and realistic fuel economy numbers matching Philippine tests and manufacturer ratings.
+- **Follow-up**: Build garage endpoints in Task 3.2.
+
+#### Task 3.2: User Garage CRUD Endpoints & Pytest Suite
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `backend/app/schemas/vehicle_schema.py`, `backend/app/api/v1/endpoints/vehicles.py`, `backend/app/api/v1/endpoints/garage.py`, `backend/app/api/v1/api_router.py`, `backend/tests/test_garage.py`
+- **Decision**: Implemented vehicle search, make/model discovery, and full garage CRUD endpoints (`/api/v1/garage`). Automated default vehicle exclusivity (only one default vehicle per user; first vehicle defaults to True; deleting default promotes next oldest). Computed estimated full range (`tank_capacity * km/L`) on responses.
+- **Testing Result**: Pytest suite in `test_garage.py` verifies catalog search, validation bounds (rejecting negative tank and zero economy), default assignment, and range calculation.
+- **Follow-up**: Build mobile UI in Task 3.3.
+
+#### Task 3.3: Mobile Garage Management & Add Vehicle Wizard
+- **Status**: `[x] Completed`
+- **Date Started**: 2026-09-30
+- **Date Completed**: 2026-09-30
+- **Files Modified**: `mobile/src/services/vehicle.service.ts`, `mobile/src/stores/useGarageStore.ts`, `mobile/app/garage/add-vehicle.tsx`, `mobile/app/garage/[id].tsx`, `mobile/app/(tabs)/garage.tsx`, `mobile/app/(tabs)/index.tsx`
+- **Decision**: Built interactive Add Vehicle Wizard supporting debounced Philippine catalog search with instant spec autofill as well as manual custom entry. Created vehicle detail view with full tank range calculations and delete alerts. Connected Garage tab and Home tab Active Vehicle Card to live `useGarageStore` state.
+- **Testing Result**: Verified dynamic default vehicle switching, empty state display, and reactive Home screen updates.
+- **Follow-up**: Proceed to Phase 4 — Maps & Navigation Engine.
 
 ---
 

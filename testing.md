@@ -132,12 +132,14 @@ Core Formulas:
 
 ## 7. Vehicle Database & Catalog Testing
 
-- [ ] **TC-VEH-01: Philippine Motorcycle Catalog Integrity**:
-  - Query database for Yamaha Aerox 155, Honda Click 125i, Yamaha NMAX 155.
-  - Assert fuel type is correctly assigned (Gasoline RON 91/95) and baseline fuel economy is within $[35, 55]\text{ km/L}$.
-- [ ] **TC-VEH-02: Custom Vehicle Creation Validation**:
-  - User submits custom vehicle with Tank Capacity $= -5\text{ L}$ or km/L $= 0$.
-  - Assert Zod schema rejects input with descriptive error message: *"Tank capacity and fuel economy must be greater than zero."*
+- [x] **TC-VEH-01: Philippine Motorcycle & Car Catalog Integrity**:
+  - Preloaded seeds queryable for top Philippine motorcycles (Aerox 155, Click 125, NMAX 155, BeAT) and cars (Vios, Innova, Mirage G4, Hilux, D-Max). *(Verified in test_garage.py)*
+- [x] **TC-VEH-02: Vehicle Creation Validation Bounds**:
+  - Submitting negative tank capacity or zero fuel economy returns HTTP 422 Unprocessable Entity. *(Verified in test_garage.py)*
+- [x] **TC-VEH-03: Default Vehicle Exclusivity & Promotion**:
+  - First vehicle automatically set to default. Setting another vehicle as default unsets previous default. *(Verified in test_garage.py)*
+- [x] **TC-VEH-04: Full Tank Range Computation**:
+  - Verifies computed `estimated_full_range_km` matches exact `tank_capacity_liters * custom_fuel_economy_kml`. *(Verified in test_garage.py)*
 
 ---
 

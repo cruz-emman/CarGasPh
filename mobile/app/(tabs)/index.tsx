@@ -1,9 +1,21 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'expo-router';
-import { TrendingDown, TrendingUp, Navigation, Fuel, Sparkles, ChevronRight } from 'lucide-react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import { TrendingDown, TrendingUp, Navigation, Fuel, Sparkles, ChevronRight, PlusCircle, Car } from 'lucide-react-native';
 import { Colors, Spacing, BorderRadius, Currency } from '../../src/constants/theme';
+import { useGarageStore } from '../../src/stores/useGarageStore';
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const { defaultVehicle, fetchGarage } = useGarageStore();
+
+  useEffect(() => {
+    fetchGarage();
+  }, []);
+
+  const activeVehicle = defaultVehicle;
+  const cpk = activeVehicle ? 62.0 / activeVehicle.fuelEconomyKmL : 1.55;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Welcome Header */}
@@ -27,33 +39,62 @@ export default function HomeScreen() {
       {/* Active Vehicle Card */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Active Vehicle</Text>
+        {activeVehicle && (
+          <TouchableOpacity onPress={() => router.push('/(tabs)/garage')}>
+            <Text style={styles.switchText}>Switch</Text>
+          </TouchableOpacity>
+        )}
       </View>
-      <View style={styles.card}>
-        <View style={styles.vehicleRow}>
-          <View>
-            <Text style={styles.vehicleName}>Yamaha Aerox 155</Text>
-            <Text style={styles.vehicleCategory}>Motorcycle • 2026</Text>
+
+      {activeVehicle ? (
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => router.push(`/garage/${activeVehicle.id}`)}
+          activeOpacity={0.85}
+        >
+          <View style={styles.vehicleRow}>
+            <View>
+              <Text style={styles.vehicleName}>
+                {activeVehicle.make} {activeVehicle.model}
+              </Text>
+              <Text style={styles.vehicleCategory}>
+                {activeVehicle.category.toUpperCase()} • {activeVehicle.year}
+                {activeVehicle.nickname ? ` • "${activeVehicle.nickname}"` : ''}
+              </Text>
+            </View>
+            <View style={styles.economyBadge}>
+              <Text style={styles.economyText}>{activeVehicle.fuelEconomyKmL.toFixed(1)} km/L</Text>
+            </View>
           </View>
-          <View style={styles.economyBadge}>
-            <Text style={styles.economyText}>40.0 km/L</Text>
+          <View style={styles.divider} />
+          <View style={styles.vehicleMetrics}>
+            <View style={styles.metricItem}>
+              <Text style={styles.metricLabel}>Fuel Required</Text>
+              <Text style={styles.metricValue}>{activeVehicle.fuelType}</Text>
+            </View>
+            <View style={styles.metricItem}>
+              <Text style={styles.metricLabel}>Cost per km</Text>
+              <Text style={styles.metricValue}>{Currency.format(cpk)}/km</Text>
+            </View>
+            <View style={styles.metricItem}>
+              <Text style={styles.metricLabel}>Tank Capacity</Text>
+              <Text style={styles.metricValue}>{activeVehicle.tankCapacityLiters} L</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.vehicleMetrics}>
-          <View style={styles.metricItem}>
-            <Text style={styles.metricLabel}>Fuel Required</Text>
-            <Text style={styles.metricValue}>Gasoline 91</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.emptyVehicleCard}
+          onPress={() => router.push('/garage/add-vehicle')}
+          activeOpacity={0.8}
+        >
+          <PlusCircle size={28} color={Colors.primary} />
+          <View style={styles.emptyVehicleTextCol}>
+            <Text style={styles.emptyVehicleTitle}>No Active Vehicle Configured</Text>
+            <Text style={styles.emptyVehicleSub}>Tap to add your car or motorcycle to calculate trip fuel cost</Text>
           </View>
-          <View style={styles.metricItem}>
-            <Text style={styles.metricLabel}>Cost per km</Text>
-            <Text style={styles.metricValue}>{Currency.format(1.55)}/km</Text>
-          </View>
-          <View style={styles.metricItem}>
-            <Text style={styles.metricLabel}>Tank Capacity</Text>
-            <Text style={styles.metricValue}>5.5 Liters</Text>
-          </View>
-        </View>
-      </View>
+        </TouchableOpacity>
+      )}
 
       {/* Quick Navigation Action Card */}
       <TouchableOpacity style={styles.actionCard} activeOpacity={0.8}>
@@ -158,6 +199,36 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.primary,
     fontWeight: '600',
+  },
+  switchText: {
+    color: Colors.primary,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  emptyVehicleCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.cardBackground,
+    borderColor: Colors.cardBorder,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    gap: Spacing.md,
+    marginBottom: Spacing.lg,
+  },
+  emptyVehicleTextCol: {
+    flex: 1,
+  },
+  emptyVehicleTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.text,
+  },
+  emptyVehicleSub: {
+    fontSize: 12,
+    color: Colors.textMuted,
+    marginTop: 2,
   },
   card: {
     backgroundColor: Colors.cardBackground,
